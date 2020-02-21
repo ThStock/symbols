@@ -8,6 +8,11 @@ import com.google.common.base.{CharMatcher, Splitter}
 import scala.annotation.tailrec
 import scala.jdk.CollectionConverters._
 
+object Sym {
+  def of(fm:java.util.Map[java.util.List[String], String]) =
+    new Sym(fm.asScala.map(entry => entry.copy(entry._1.asScala.toList)).toMap)
+}
+
 class Sym(fixedMappings: Map[Seq[String], String] = Map.empty) {
   private val known: CopyOnWriteArraySet[String] = new CopyOnWriteArraySet();
 
