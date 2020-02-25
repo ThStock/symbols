@@ -23,6 +23,18 @@ class SymTest extends FunSuite {
     assertEquals("JOA", testee.symbolOf("Jo", "Ja"))
   }
 
+  test("testSymbolsÖÄÜ") {
+    val testee = new Sym
+    assertEquals("OO", testee.symbolOf("Öä", "Öü"))
+    assertEquals("OOU", testee.symbolOf("Öä", "Öü"))
+    assertEquals("OOA", testee.symbolOf("Öä", "Öü"))
+  }
+
+  test("testNormalize") {
+    val testee = new Sym
+    assertEquals("OaOu", testee.normalize("ÖäÖü"))
+  }
+
   test("testSymbols4") {
     val testee = new Sym(Map(
       Seq("a") -> "TS",

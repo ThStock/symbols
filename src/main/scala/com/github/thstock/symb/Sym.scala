@@ -2,6 +2,7 @@ package com.github.thstock.symb
 
 import java.text.Normalizer
 import java.util.concurrent.CopyOnWriteArraySet
+import java.util.regex.Pattern
 
 import com.google.common.base.{CharMatcher, Splitter}
 
@@ -23,12 +24,19 @@ class Sym(fixedMappings: Map[Seq[String], String] = Map.empty) {
   }
 
   def symbolOf(elems: java.util.List[String]): String = {
+
     val words: Seq[String] = elems.asScala.toSeq
+      .map(normalize)
       .flatMap(in => Splitter.on(letterMatcher().negate()).split(in).asScala)
-      .map(s => Normalizer.normalize(s, Normalizer.Form.NFD))
       .filterNot(_.isBlank)
 
     selectSymbol(words)
+  }
+
+  private[symb] def normalize(s:String):String = {
+    val o = Normalizer.normalize(s, Normalizer.Form.NFD)
+    val pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+    pattern.matcher(o).replaceAll("")
   }
 
   @tailrec
